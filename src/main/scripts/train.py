@@ -58,7 +58,7 @@ def setCongestionColumnByHourAndMonth(df):
     df = df.merge(temp, on=["month", "road", "hour", "minute"])
     return df
 
-def transformPCA(df):
+def transformPCA(df, label):
 
     pca = PCA(n_components=PCA_N_COMPONENTS, svd_solver='full')
     df = pca.fit_transform(df)
@@ -68,14 +68,15 @@ def transformPCA(df):
         outfile.write("N Compoments: " + str(PCA_N_COMPONENTS) + "\n")
         outfile.write("Explained Variance Ratio: " + str(pca.explained_variance_ratio_) + "\n")
         outfile.write("Singular values: " + str(pca.singular_values_) + "\n\n")
-        
-    return df
+    
+    
+    return df, label.values
 
 # Read in data
 print("Reading data...")
 df = pd.read_csv("data/train.csv")
 
-df = ( 
+X, y = ( 
     df.pipe(setDataTypes)
         .pipe(createCategoryColumnRoad)
         .pipe(extractExtraInfoFromTime)
@@ -84,10 +85,12 @@ df = (
         .pipe(setCongestionColumnByHourAndMonth)
         .pipe(setCongestionColumnByDayOfWeekAndHour)
         .drop(["row_id","x","y","direction", "time"], axis=1)
-        .pipe(transformPCA)
+        .pipe(lambda _df:
+            transformPCA(_df.drop("congestion",axis=1), _df['congestion'])
+        )
 )
 
-X_train, X_test, y_train, y_test = train_test_split(df.drop("congestion",axis=1), df['congestion'], test_size=0.33, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 # Fit a model
 clf = RandomForestRegressor(n_estimators=100)
 
