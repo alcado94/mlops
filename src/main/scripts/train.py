@@ -8,43 +8,42 @@ import os
 import numpy as np
 import pandas as pd
 
-# Read in data
+def setDataTypes(df):
+    return df.assign(
+                time = pd.to_datetime(df.time)
+            )
 
+def createCategoryColumnRoad(df):
+    return df.assign(
+                road = (df.x.astype(str) + df.y.astype(str) + df.direction).astype('category').cat.codes
+            )
+
+def extractExtraInfoFromTime(df):
+    return df.assign(
+                day = df.time.dt.day,
+                hour = df.time.dt.hour,
+                minute = df.time.dt.minute,
+                dayofweek = df.time.dt.dayofweek,
+                month = df.time.dt.month,
+                weekend = (df.time.dt.weekday >= 5),
+            )
+
+def setHourCongestionForMonthColumn(df):
+    temp = df.groupby(["month", "road", "hour", "minute"]).median().reset_index()[["month", "road", "hour", "minute", "congestion"]]
+    temp = temp.rename(columns={"congestion": "month_hour_congestion"})
+    df = df.merge(temp, on=["month", "road", "hour", "minute"])
+    return df
+
+# Read in data
 df = pd.read_csv("data/train.csv")
 
 df = ( 
-    df.pipe(
-        lambda _df:
-            _df.assign(
-                time = pd.to_datetime(_df.time)
-            )
-            .astype({
-                # 'x': 'category',
-                # 'y': 'category',
-                # 'direction': 'category',
-            })
-    )
-    .pipe(
-        lambda _df:
-            _df.assign(
-                day = _df.time.dt.day,
-                hour = _df.time.dt.hour,
-                dayofweek = _df.time.dt.dayofweek,
-                month = _df.time.dt.month,
-                weekend = (_df.time.dt.weekday >= 5),
-                road = _df.x.astype(str) + _df.y.astype(str) + _df.direction
-            )
-    )
-    .pipe(
-        lambda _df:
-            _df.assign(
-                road = _df.road.astype('category').cat.codes,
-            )
-    )
-    .drop(["row_id","x","y","direction", "time"], axis=1)
+    df.pipe(setDataTypes)
+        .pipe(createCategoryColumnRoad)
+        .pipe(extractExtraInfoFromTime)
+        .pipe(setHourCongestionForMonthColumn)
+        .drop(["row_id","x","y","direction", "time"], axis=1)
 )
-
-print(df.road.unique())
 
 X_train, X_test, y_train, y_test = train_test_split(df.drop("congestion",axis=1), df['congestion'], test_size=0.33, random_state=42)
 # Fit a model
