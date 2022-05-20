@@ -35,6 +35,12 @@ def setCongestionColumnByDayAndHour(df):
     df = df.merge(temp, on=["day", "road", "hour", "minute"])
     return df
 
+def setCongestionColumnByDayOfWeekAndHour(df):
+    temp = df.groupby(["dayokweek", "road", "hour", "minute"]).median().reset_index()[["dayokweek", "road", "hour", "minute", "congestion"]]
+    temp = temp.rename(columns={"congestion": "dayokweek_hour_congestion"})
+    df = df.merge(temp, on=["dayokweek", "road", "hour", "minute"])
+    return df
+
 def setCongestionColumnByMonth(df):
     temp = df.groupby(["month", "road"]).median().reset_index()[["month", "road", "congestion"]]
     temp = temp.rename(columns={"congestion": "month_congestion"})
@@ -57,12 +63,13 @@ df = (
         .pipe(setCongestionColumnByDayAndHour)
         .pipe(setCongestionColumnByMonth)
         .pipe(setCongestionColumnByHourAndMonth)
+        .pipe(setCongestionColumnByDayOfWeekAndHour)
         .drop(["row_id","x","y","direction", "time"], axis=1)
 )
 
 X_train, X_test, y_train, y_test = train_test_split(df.drop("congestion",axis=1), df['congestion'], test_size=0.33, random_state=42)
 # Fit a model
-clf = RandomForestRegressor(n_estimators=20)
+clf = RandomForestRegressor(n_estimators=100)
 
 clf.fit(X_train, y_train)
 
