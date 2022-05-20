@@ -61,13 +61,13 @@ df = (
 
 X_train, X_test, y_train, y_test = train_test_split(df.drop("congestion",axis=1), df['congestion'], test_size=0.33, random_state=42)
 # Fit a model
-depth = 4
-clf = RandomForestRegressor(max_depth=depth)
+clf = RandomForestRegressor(n_estimators=200)
+
 clf.fit(X_train, y_train)
 
 
-y_pred = clf.predict(X_test)
 
+y_pred = clf.predict(X_test)
 
 
 with open("metrics.txt", "w") as outfile:
