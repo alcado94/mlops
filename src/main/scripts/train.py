@@ -28,6 +28,7 @@ df = (
             _df.assign(
                 day = _df.time.dt.day,
                 hour = _df.time.dt.hour,
+                dayofweek = _df.time.dt.dayofweek,
                 month = _df.time.dt.month,
                 road = f'{_df.x}{_df.y}{_df.direction}'
             )
@@ -55,7 +56,14 @@ with open("metrics.txt", "w") as outfile:
     outfile.write("Accuracy: " + str(acc) + "\n")
 
 # Plot it
-disp = ConfusionMatrixDisplay.from_estimator(
-    clf, X_test, y_test, normalize="true", cmap=plt.cm.Blues
-)
-plt.savefig("confusion_matrix.png")
+importances = clf.feature_importances_
+forest_importances = pd.Series(importances, index=list(X_train.columns))
+std = np.std([tree.feature_importances_ for tree in clf.estimators_], axis=0)
+
+fig, ax = plt.subplots()
+forest_importances.plot.bar(yerr=std, ax=ax)
+ax.set_title("Feature importances using MDI")
+ax.set_ylabel("Mean decrease in impurity")
+fig.tight_layout()
+
+plt.savefig("plot.png")
