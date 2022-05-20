@@ -1,0 +1,27 @@
+name: train-my-model
+ 
+on: push
+ 
+jobs:
+  run:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - uses: actions/checkout@v2
+ 
+      - uses: iterative/setup-cml@v1
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+ 
+      - name: cml
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pip3 install -r requirements.txt
+          python src/main/scripts/train.py
+ 
+          cat metrics.txt >> report.md
+          cml publish plot.png --md >> report.md
+          cml send-comment report.md
