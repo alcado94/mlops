@@ -88,4 +88,4 @@ fig.tight_layout()
 plt.savefig("plot.png")
 
 
-joblib.dump(clf, "models/model.pkl")
+joblib.dump(clf, "model.pkl")
