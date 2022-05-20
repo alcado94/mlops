@@ -36,9 +36,9 @@ def setCongestionColumnByDayAndHour(df):
     return df
 
 def setCongestionColumnByDayOfWeekAndHour(df):
-    temp = df.groupby(["dayokweek", "road", "hour", "minute"]).median().reset_index()[["dayokweek", "road", "hour", "minute", "congestion"]]
-    temp = temp.rename(columns={"congestion": "dayokweek_hour_congestion"})
-    df = df.merge(temp, on=["dayokweek", "road", "hour", "minute"])
+    temp = df.groupby(["dayofweek", "road", "hour", "minute"]).median().reset_index()[["dayofweek", "road", "hour", "minute", "congestion"]]
+    temp = temp.rename(columns={"congestion": "dayofweek_hour_congestion"})
+    df = df.merge(temp, on=["dayofweek", "road", "hour", "minute"])
     return df
 
 def setCongestionColumnByMonth(df):
