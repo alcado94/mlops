@@ -45,7 +45,7 @@ print(df.head())
 
 X_train, X_test, y_train, y_test = train_test_split(df.drop("congestion",axis=1), df['congestion'], test_size=0.33, random_state=42)
 # Fit a model
-depth = 2
+depth = 3
 clf = RandomForestClassifier(max_depth=depth)
 clf.fit(X_train, y_train)
 
