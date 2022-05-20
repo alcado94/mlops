@@ -28,7 +28,19 @@ def extractExtraInfoFromTime(df):
                 weekend = (df.time.dt.weekday >= 5),
             )
 
-def setHourCongestionForMonthColumn(df):
+def setCongestionColumnByDayAndHour(df):
+    temp = df.groupby(["day", "road", "hour", "minute"]).median().reset_index()[["day", "road", "hour", "minute", "congestion"]]
+    temp = temp.rename(columns={"congestion": "day_hour_congestion"})
+    df = df.merge(temp, on=["day", "road", "hour", "minute"])
+    return df
+
+def setCongestionColumnByMonth(df):
+    temp = df.groupby(["month", "road"]).median().reset_index()[["month", "road", "congestion"]]
+    temp = temp.rename(columns={"congestion": "month_congestion"})
+    df = df.merge(temp, on=["month", "road"])
+    return df
+
+def setCongestionColumnByHourAndMonth(df):
     temp = df.groupby(["month", "road", "hour", "minute"]).median().reset_index()[["month", "road", "hour", "minute", "congestion"]]
     temp = temp.rename(columns={"congestion": "month_hour_congestion"})
     df = df.merge(temp, on=["month", "road", "hour", "minute"])
@@ -41,7 +53,9 @@ df = (
     df.pipe(setDataTypes)
         .pipe(createCategoryColumnRoad)
         .pipe(extractExtraInfoFromTime)
-        .pipe(setHourCongestionForMonthColumn)
+        .pipe(setCongestionColumnByDayAndHour)
+        .pipe(setCongestionColumnByMonth)
+        .pipe(setCongestionColumnByHourAndMonth)
         .drop(["row_id","x","y","direction", "time"], axis=1)
 )
 
