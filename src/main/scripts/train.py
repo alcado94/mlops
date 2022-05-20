@@ -1,6 +1,7 @@
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.model_selection import train_test_split
+from sklearn import metrics
 import matplotlib.pyplot as plt
 import json
 import os
@@ -50,10 +51,15 @@ depth = 4
 clf = RandomForestRegressor(max_depth=depth)
 clf.fit(X_train, y_train)
 
-acc = clf.score(X_test, y_test)
+
+y_pred = clf.predict(X_test)
+
+
 
 with open("metrics.txt", "w") as outfile:
-    outfile.write("Accuracy: " + str(acc) + "\n")
+    outfile.write("Mean Absolute Error: " + str(metrics.mean_absolute_error(y_test, y_pred)) + "\n")
+    outfile.write("Mean Squared Error: " + str(metrics.mean_squared_error(y_test, y_pred)) + "\n")
+    outfile.write("Root Mean Squared Error: " + str(np.sqrt(metrics.mean_squared_error(y_test, y_pred))) + "\n")
 
 # Plot it
 importances = clf.feature_importances_
