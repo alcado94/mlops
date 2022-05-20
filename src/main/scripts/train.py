@@ -8,6 +8,11 @@ import os
 import numpy as np
 import pandas as pd
 import joblib
+from sklearn.decomposition import PCA
+
+
+PCA_N_COMPONENTS = 4
+
 
 def setDataTypes(df):
     return df.assign(
@@ -53,7 +58,21 @@ def setCongestionColumnByHourAndMonth(df):
     df = df.merge(temp, on=["month", "road", "hour", "minute"])
     return df
 
+def transformPCA(df):
+
+    pca = PCA(n_components=PCA_N_COMPONENTS, svd_solver='full')
+    df = pca.fit(df)
+
+    with open("pca.txt", "w") as outfile:
+        outfile.write("\nInfo PCA: \n")
+        outfile.write("N Compoments: " + str(PCA_N_COMPONENTS) + "\n")
+        outfile.write("Explained Variance Ratio: " + str(pca.explained_variance_ratio_) + "\n")
+        outfile.write("Singular values: " + str(pca.singular_values_) + "\n\n")
+        
+    return df
+
 # Read in data
+print("Reading data...")
 df = pd.read_csv("data/train.csv")
 
 df = ( 
@@ -65,6 +84,7 @@ df = (
         .pipe(setCongestionColumnByHourAndMonth)
         .pipe(setCongestionColumnByDayOfWeekAndHour)
         .drop(["row_id","x","y","direction", "time"], axis=1)
+        .pipe(transformPCA)
 )
 
 X_train, X_test, y_train, y_test = train_test_split(df.drop("congestion",axis=1), df['congestion'], test_size=0.33, random_state=42)
