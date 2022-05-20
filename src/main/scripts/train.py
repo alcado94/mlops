@@ -7,6 +7,7 @@ import json
 import os
 import numpy as np
 import pandas as pd
+import joblib
 
 def setDataTypes(df):
     return df.assign(
@@ -87,3 +88,6 @@ ax.set_ylabel("Mean decrease in impurity")
 fig.tight_layout()
 
 plt.savefig("plot.png")
+
+
+joblib.dump(clf, "models/model.pkl")
