@@ -61,7 +61,7 @@ def setCongestionColumnByHourAndMonth(df):
 def transformPCA(df):
 
     pca = PCA(n_components=PCA_N_COMPONENTS, svd_solver='full')
-    df = pca.fit(df)
+    df = pca.fit_transform(df)
 
     with open("pca.txt", "w") as outfile:
         outfile.write("\nInfo PCA: \n")
