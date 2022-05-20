@@ -1,4 +1,4 @@
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
@@ -46,7 +46,7 @@ print(df.head())
 X_train, X_test, y_train, y_test = train_test_split(df.drop("congestion",axis=1), df['congestion'], test_size=0.33, random_state=42)
 # Fit a model
 depth = 4
-clf = RandomForestClassifier(max_depth=depth)
+clf = RandomForestRegressor(max_depth=depth)
 clf.fit(X_train, y_train)
 
 acc = clf.score(X_test, y_test)
