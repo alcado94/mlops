@@ -22,7 +22,7 @@ jobs:
           pip install -U pip
           pip3 install -r src/main/requirements.txt
           dvc params diff >> report.md
-          dvc exp run
+          dvc repro
 
       - name: Show Evaluation
         env:
