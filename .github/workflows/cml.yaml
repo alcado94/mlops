@@ -17,16 +17,14 @@ jobs:
           python-version: 3.8
       - name: Execute pipeline dvc
         run: |
-          pip3 install -r requirements.txt
+          pip3 install -r src/main/requirements.txt
           dvc params diff >> report.md
           dvc exp run
 
-      - name: cml
+      - name: Show Evaluation
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pip3 install -r requirements.txt
-          
           dvc metrics diff >> report.md
           cml publish plot.png --md >> report.md
           cml send-comment report.md

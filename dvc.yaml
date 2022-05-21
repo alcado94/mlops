@@ -23,7 +23,10 @@ stages:
         - data/test
         - model.pkl
         - ./src/main/scripts/evaluation.py
-      cmd: python src/main/scripts/evaluation.py model.pkl data/test
+      outs: 
+        - plot.png
+        - metrics.txt
       metrics:
       - evaluation.json:
           cache: false
+      cmd: python src/main/scripts/evaluation.py model.pkl data/test

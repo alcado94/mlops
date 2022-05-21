@@ -12,15 +12,15 @@ stages:
       nfiles: 1
     params:
       params.yaml:
-        train.n_estimators: 2
+        train.n_estimators: 3
     outs:
     - path: data/test
       md5: f0129c39bb03ca1cacf11429d4c87f4d.dir
       size: 13588102
       nfiles: 1
     - path: model.pkl
-      md5: 49e2b1e760574b8d683e6b63cec02e2f
-      size: 75812015
+      md5: 31570956f60e3de28b68aecafdf2a47e
+      size: 113718008
   evaluation:
     cmd: python src/main/scripts/evaluation.py model.pkl data/test
     deps:
@@ -32,12 +32,18 @@ stages:
       size: 13588102
       nfiles: 1
     - path: model.pkl
-      md5: 49e2b1e760574b8d683e6b63cec02e2f
-      size: 75812015
+      md5: 31570956f60e3de28b68aecafdf2a47e
+      size: 113718008
     outs:
     - path: evaluation.json
-      md5: 4e0fadbd1475543f0fa8bc0a2be09a54
-      size: 94
+      md5: 94fb6c22442736a4b76073697d074db7
+      size: 93
+    - path: metrics.txt
+      md5: 753d9042b48ab65b5583d3fc1b1bb0ae
+      size: 120
+    - path: plot.png
+      md5: 822ecb5aa7a46bfdfc362b6ef43c8b4d
+      size: 34881
   preprocess:
     cmd: python src/main/scripts/preprocess.py data/test
     deps:
@@ -49,7 +55,7 @@ stages:
       size: 3659
     params:
       params.yaml:
-        preprocess.pca.n_components: 2
+        preprocess.pca.n_components: 4
     outs:
     - path: data/preprocess
       md5: 9bfe46d8fb34c6b8bd563371774ade36.dir
