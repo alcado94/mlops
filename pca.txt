@@ -1,6 +1,0 @@
-
-Info PCA: 
-N Compoments: 4
-Explained Variance Ratio: [0.488427   0.22320571 0.16909915 0.0490412 ]
-Singular values: [25569.6534945  17285.32936738 15045.12223049  8102.24809552]
-

@@ -1,18 +1,8 @@
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.model_selection import train_test_split
-from sklearn import metrics
-import matplotlib.pyplot as plt
-import json
-import os
-import numpy as np
 import pandas as pd
-import joblib
 from sklearn.decomposition import PCA
-from sklearn.model_selection import RandomizedSearchCV
 
 PCA_N_COMPONENTS = 4
-
 
 def setDataTypes(df):
     return df.assign(
@@ -79,7 +69,6 @@ def transformPCA(df, label):
     toret['congestion'] = label.values
     return toret
 
-# Read in data
 print("Reading data...")
 df = pd.read_csv("data/train.csv")
 
@@ -97,54 +86,3 @@ df = (
         #     transformPCA(_df.drop("congestion",axis=1), _df['congestion'])
         # )
 )
-print("Finished preprocessing")
-
-X_train, X_test, y_train, y_test = train_test_split(df.drop("congestion",axis=1), df['congestion'], test_size=0.33, random_state=42)
-
-
-print("Training...")
-# Fit a model
-
-random_grid = {
-    'n_estimators': [int(x) for x in np.linspace(start = 200, stop = 2000, num = 5)],
-    'max_features': ['auto', 'sqrt'],
-    'max_depth': [int(x) for x in np.linspace(10, 110, num = 4)],
-    'min_samples_split': [2, 5, 10],
-    'min_samples_leaf': [1, 2, 4],
-    'bootstrap': [True, False]
-}
-
-
-# rf = RandomForestRegressor()
-# clf = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 100, cv = 3, verbose=2, random_state=42, n_jobs = -1)
-
-
-clf = RandomForestRegressor(n_estimators=100, n_jobs=-1, random_state = 42)
-
-clf.fit(X_train, y_train)
-
-print("Finished training")
-
-y_pred = clf.predict(X_test)
-
-
-with open("metrics.txt", "w") as outfile:
-    outfile.write("Mean Absolute Error: " + str(metrics.mean_absolute_error(y_test, y_pred)) + "\n")
-    outfile.write("Mean Squared Error: " + str(metrics.mean_squared_error(y_test, y_pred)) + "\n")
-    outfile.write("Root Mean Squared Error: " + str(np.sqrt(metrics.mean_squared_error(y_test, y_pred))) + "\n")
-
-# Plot it
-importances = clf.feature_importances_
-forest_importances = pd.Series(importances, index=list(X_train.columns))
-std = np.std([tree.feature_importances_ for tree in clf.estimators_], axis=0)
-
-fig, ax = plt.subplots()
-forest_importances.plot.bar(yerr=std, ax=ax)
-ax.set_title("Feature importances using MDI")
-ax.set_ylabel("Mean decrease in impurity")
-fig.tight_layout()
-
-plt.savefig("plot.png")
-
-
-joblib.dump(clf, "model.pkl")
