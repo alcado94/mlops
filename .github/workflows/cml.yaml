@@ -21,13 +21,13 @@ jobs:
         run: |
           pip install -U pip
           pip3 install -r src/main/requirements.txt
-          dvc params diff >> report.md
+          dvc params diff --md >> report.md
           dvc repro
 
       - name: Show Evaluation
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          dvc metrics diff >> report.md
+          dvc metrics diff --md >> report.md
           cml publish plot.png --md >> report.md
           cml send-comment report.md

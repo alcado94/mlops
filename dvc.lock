@@ -38,6 +38,9 @@ stages:
     - path: metrics.txt
       md5: d6409a6f5f4adea0a86b42b655375067
       size: 118
+    - path: plot.png
+      md5: 981fb30a2de66aaae0a898ba727e8856
+      size: 7990
   preprocess:
     cmd: python src/main/scripts/preprocess.py data/test
     deps:

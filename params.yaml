@@ -1,6 +1,6 @@
 preprocess:
   pca:
-    n_components: 4
+    n_components: 3
 
 train:
 
