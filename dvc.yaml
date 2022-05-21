@@ -12,8 +12,6 @@ stages:
       deps: 
         - ./src/main/scripts/train.py
         - data/preprocess
-      params:
-        - train.n_estimators
       outs: 
         - data/test
         - model.pkl
