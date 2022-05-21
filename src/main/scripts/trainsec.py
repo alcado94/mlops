@@ -1,3 +1,4 @@
+
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.model_selection import train_test_split
@@ -10,9 +11,7 @@ import pandas as pd
 import joblib
 from sklearn.decomposition import PCA
 
-
 PCA_N_COMPONENTS = 4
-
 
 def setDataTypes(df):
     return df.assign(
@@ -63,21 +62,19 @@ def transformPCA(df, label):
     pca = PCA(n_components=PCA_N_COMPONENTS, svd_solver='full')
     df = pca.fit_transform(df)
 
-    with open("pca.txt", "w") as outfile:
+    with open("params.txt", "w") as outfile:
         outfile.write("\nInfo PCA: \n")
         outfile.write("N Compoments: " + str(PCA_N_COMPONENTS) + "\n")
         outfile.write("Explained Variance Ratio: " + str(pca.explained_variance_ratio_) + "\n")
         outfile.write("Singular values: " + str(pca.singular_values_) + "\n\n")
     
-    toret = pd.DataFrame(df)
-    toret['congestion'] = label.values
-    return toret
+    return pd.DataFrame([df, label.values]) 
 
 # Read in data
 print("Reading data...")
 df = pd.read_csv("data/train.csv")
 
-df = ( 
+X, y = ( 
     df.pipe(setDataTypes)
         .pipe(createCategoryColumnRoad)
         .pipe(extractExtraInfoFromTime)
@@ -91,8 +88,7 @@ df = (
         )
 )
 
-
-X_train, X_test, y_train, y_test = train_test_split(df.drop("congestion",axis=1), df['congestion'], test_size=0.33, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 # Fit a model
 clf = RandomForestRegressor(n_estimators=100)
 
@@ -121,3 +117,24 @@ plt.savefig("plot.png")
 
 
 joblib.dump(clf, "model.pkl")
+
+# Read in data
+print("Reading data...")
+df = pd.read_csv("../../data/train.csv")
+
+X, y = ( 
+        df
+            .pipe(setDataTypes)
+            .pipe(createCategoryColumnRoad)
+            .pipe(extractExtraInfoFromTime)
+            .pipe(setCongestionColumnByDayAndHour)
+            .pipe(setCongestionColumnByMonth)
+            .pipe(setCongestionColumnByHourAndMonth)
+            .pipe(setCongestionColumnByDayOfWeekAndHour)
+            .drop(["row_id","x","y","direction", "time"], axis=1)
+            .pipe(lambda _df:
+                transformPCA(_df.drop("congestion",axis=1), _df['congestion'])
+            )
+)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
