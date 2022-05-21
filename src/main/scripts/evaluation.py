@@ -34,14 +34,14 @@ with open("metrics.txt", "w") as outfile:
     outfile.write("Root Mean Squared Error: " + str(np.sqrt(metrics.mean_squared_error(y_test, y_pred))) + "\n")
 
 # Plot it
-importances = model.feature_importances_
-forest_importances = pd.Series(importances, index=list(X_test.columns))
-std = np.std([tree.feature_importances_ for tree in model.estimators_], axis=0)
+# importances = model.feature_importances_
+# forest_importances = pd.Series(importances, index=list(X_test.columns))
+# std = np.std([tree.feature_importances_ for tree in model.estimators_], axis=0)
 
+# forest_importances.plot.bar(yerr=std, ax=ax)
+# ax.set_title("Feature importances using MDI")
+# ax.set_ylabel("Mean decrease in impurity")
 fig, ax = plt.subplots()
-forest_importances.plot.bar(yerr=std, ax=ax)
-ax.set_title("Feature importances using MDI")
-ax.set_ylabel("Mean decrease in impurity")
 fig.tight_layout()
 
 plt.savefig("plot.png")

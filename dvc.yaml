@@ -22,7 +22,7 @@ stages:
         - model.pkl
         - ./src/main/scripts/evaluation.py
       outs: 
-        - plot.png
+        # - plot.png
         - metrics.txt
       metrics:
       - evaluation.json:
