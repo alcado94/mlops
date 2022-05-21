@@ -19,7 +19,7 @@ jobs:
         run: |
           pip3 install -r requirements.txt
           dvc params diff >> report.md
-          dvc repro
+          dvc exp run
 
       - name: cml
         env:
@@ -28,6 +28,5 @@ jobs:
           pip3 install -r requirements.txt
           
           dvc metrics diff >> report.md
-          cat metrics.txt >> report.md
           cml publish plot.png --md >> report.md
           cml send-comment report.md
