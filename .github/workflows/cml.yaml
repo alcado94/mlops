@@ -22,7 +22,7 @@ jobs:
           pip3 install -r requirements.txt
           python src/main/scripts/train.py
 
-          cat params.txt >> report.md
+          
           cat metrics.txt >> report.md
           cml publish plot.png --md >> report.md
           cml send-comment report.md
