@@ -34,6 +34,10 @@ stages:
     - path: model.pkl
       md5: 49e2b1e760574b8d683e6b63cec02e2f
       size: 75812015
+    outs:
+    - path: evaluation.json
+      md5: 4e0fadbd1475543f0fa8bc0a2be09a54
+      size: 94
   preprocess:
     cmd: python src/main/scripts/preprocess.py data/test
     deps:
@@ -45,7 +49,7 @@ stages:
       size: 3659
     params:
       params.yaml:
-        preprocess.pca.n_components: 5
+        preprocess.pca.n_components: 2
     outs:
     - path: data/preprocess
       md5: 9bfe46d8fb34c6b8bd563371774ade36.dir
