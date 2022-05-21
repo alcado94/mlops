@@ -3,5 +3,5 @@ preprocess:
     n_components: 4
 
 train:
-  n_estimators: 3
+
 
