@@ -9,10 +9,12 @@ import os
 import numpy as np
 import pandas as pd
 import joblib
+import yaml
 from sklearn.decomposition import PCA
 from sklearn.model_selection import RandomizedSearchCV
 
-PCA_N_COMPONENTS = 4
+params = yaml.safe_load("params.yaml")['train']
+
 
 # Read in data
 print("Reading data...")
@@ -41,7 +43,7 @@ random_grid = {
 # clf = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 100, cv = 3, verbose=2, random_state=42, n_jobs = -1)
 
 
-clf = RandomForestRegressor(n_estimators=1, random_state = 42)
+clf = RandomForestRegressor(n_estimators=params['n_estimators'], random_state = 42)
 
 clf.fit(X_train, y_train)
 

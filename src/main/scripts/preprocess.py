@@ -2,12 +2,11 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 from sklearn.decomposition import PCA
 import os
-import sys
+import yaml
 
-PCA_N_COMPONENTS = 4
+params = yaml.safe_load("params.yaml")['preprocess']
 
 os.makedirs(os.path.join("data", "preprocess"), exist_ok=True)
-
 
 def setDataTypes(df):
     return df.assign(
@@ -61,12 +60,12 @@ def setCongestionColumnByRoad(df):
 
 def transformPCA(df, label):
 
-    pca = PCA(n_components=PCA_N_COMPONENTS, svd_solver='full')
+    pca = PCA(n_components=params['pca']['n_components'], svd_solver='full')
     df = pca.fit_transform(df)
 
     with open("params.txt", "w") as outfile:
         outfile.write("\nInfo PCA: \n")
-        outfile.write("N Compoments: " + str(PCA_N_COMPONENTS) + "\n")
+        outfile.write("N Compoments: " + str(params['pca']['n_components']) + "\n")
         outfile.write("Explained Variance Ratio: " + str(pca.explained_variance_ratio_) + "\n")
         outfile.write("Singular values: " + str(pca.singular_values_) + "\n\n")
     

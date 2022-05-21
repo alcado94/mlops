@@ -1,0 +1,7 @@
+preprocess:
+  pca:
+    n_components: 5
+
+train:
+  n_estimators: 1
+
