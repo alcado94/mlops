@@ -10,18 +10,21 @@ jobs:
       - uses: actions/checkout@v2
  
       - uses: iterative/setup-cml@v1
+      - uses: iterative/setup-dvc@v1
 
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
- 
+      - name: Execute pipeline dvc
+        run: |
+          pip3 install -r requirements.txt
+          dvc repro
+
       - name: cml
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pip3 install -r requirements.txt
-          python src/main/scripts/train.py
-
           cat params.txt >> report.md
           cat metrics.txt >> report.md
           cml publish plot.png --md >> report.md

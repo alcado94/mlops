@@ -1,0 +1,29 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python src/main/scripts/train.py data/prepared
+    deps:
+    - path: ./src/main/scripts/train.py
+      md5: f8873078c6ee9b6d15d80170fdb994d2
+      size: 5588
+    outs:
+    - path: data/prepared
+      md5: 110d0a1112b6aa80675b878de05d9338.dir
+      size: 22304110
+      nfiles: 1
+    - path: model.pkl
+      md5: 0fee70ac175016d79e481f9170c6fc91
+      size: 37968107
+  evaluation:
+    cmd: python src/main/scripts/evaluation.py model.pkl data/prepared
+    deps:
+    - path: ./src/main/scripts/evaluation.py
+      md5: cf48e9c4d12735a62b6d38ed3cc72773
+      size: 1352
+    - path: data/prepared
+      md5: 110d0a1112b6aa80675b878de05d9338.dir
+      size: 22304110
+      nfiles: 1
+    - path: model.pkl
+      md5: 0fee70ac175016d79e481f9170c6fc91
+      size: 37968107

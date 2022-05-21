@@ -1,6 +1,8 @@
 from sklearn.model_selection import train_test_split
 import pandas as pd
 from sklearn.decomposition import PCA
+import os
+import sys
 
 PCA_N_COMPONENTS = 4
 
@@ -70,7 +72,7 @@ def transformPCA(df, label):
     return toret
 
 print("Reading data...")
-df = pd.read_csv("data/train.csv")
+df = pd.read_csv("data/train.csv", index_col=False)
 
 df = ( 
     df.pipe(setDataTypes)
@@ -86,3 +88,5 @@ df = (
         #     transformPCA(_df.drop("congestion",axis=1), _df['congestion'])
         # )
 )
+
+df.to_csv(os.path.join(sys.argv[1], "df_prepared.csv"), index=False)

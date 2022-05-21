@@ -1,14 +1,24 @@
 
-
 from sklearn import metrics
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import joblib
+import sys
+import os
+import pickle
 
+# if len(sys.argv) != 3:
+#     sys.stderr.write("Arguments error. Usage:\n")
+#     sys.stderr.write("\tpython evaluate.py model features\n")
+#     sys.exit(1)
 
-y_pred = clf.predict(X_test)
+model = joblib.load(sys.argv[1])
+df_test = pd.read_csv(os.path.join(sys.argv[2], "df_test.csv"), index_col=False)
 
+y_test = df_test['congestion']
+X_test = df_test.drop(['congestion'], axis=1)
+y_pred = model.predict(X_test)
 
 with open("metrics.txt", "w") as outfile:
     outfile.write("Mean Absolute Error: " + str(metrics.mean_absolute_error(y_test, y_pred)) + "\n")
@@ -16,9 +26,9 @@ with open("metrics.txt", "w") as outfile:
     outfile.write("Root Mean Squared Error: " + str(np.sqrt(metrics.mean_squared_error(y_test, y_pred))) + "\n")
 
 # Plot it
-importances = clf.feature_importances_
-forest_importances = pd.Series(importances, index=list(X_train.columns))
-std = np.std([tree.feature_importances_ for tree in clf.estimators_], axis=0)
+importances = model.feature_importances_
+forest_importances = pd.Series(importances, index=list(X_test.columns))
+std = np.std([tree.feature_importances_ for tree in model.estimators_], axis=0)
 
 fig, ax = plt.subplots()
 forest_importances.plot.bar(yerr=std, ax=ax)
@@ -29,4 +39,4 @@ fig.tight_layout()
 plt.savefig("plot.png")
 
 
-joblib.dump(clf, "model.pkl")
+# joblib.dump(clf, "model.pkl")

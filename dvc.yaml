@@ -1,0 +1,14 @@
+stages:
+    train:
+      deps: 
+        - ./src/main/scripts/train.py
+      outs: 
+        - data/prepared
+        - model.pkl
+      cmd: python src/main/scripts/train.py data/prepared
+    evaluation:
+      deps: 
+        - data/prepared
+        - model.pkl
+        - ./src/main/scripts/evaluation.py
+      cmd: python src/main/scripts/evaluation.py model.pkl data/prepared
