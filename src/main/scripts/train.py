@@ -119,9 +119,9 @@ random_grid = {
 # clf = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 100, cv = 3, verbose=2, random_state=42, n_jobs = -1)
 
 
-clf = RandomForestRegressor(n_estimators=100, random_state = 42)
+clf = RandomForestRegressor(n_estimators=1, random_state = 42)
 
-# clf.fit(X_train, y_train)
+clf.fit(X_train, y_train)
 
 print("Finished training")
 
