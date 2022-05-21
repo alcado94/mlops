@@ -121,7 +121,7 @@ random_grid = {
 
 clf = RandomForestRegressor(n_estimators=100, random_state = 42)
 
-clf.fit(X_train, y_train)
+# clf.fit(X_train, y_train)
 
 print("Finished training")
 
