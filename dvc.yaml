@@ -3,6 +3,8 @@ stages:
       deps: 
         - ./src/main/scripts/preprocess.py
         - ./data/train.csv
+      params:
+        - preprocess.pca.n_components
       outs: 
         - data/preprocess
       cmd: python src/main/scripts/preprocess.py data/test
@@ -10,6 +12,8 @@ stages:
       deps: 
         - ./src/main/scripts/train.py
         - data/preprocess
+      params:
+        - train.n_estimators
       outs: 
         - data/test
         - model.pkl

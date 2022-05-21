@@ -13,7 +13,7 @@ import yaml
 from sklearn.decomposition import PCA
 from sklearn.model_selection import RandomizedSearchCV
 
-params = yaml.safe_load("params.yaml")['train']
+params = yaml.safe_load(open("params.yaml"))['train']
 
 
 # Read in data

@@ -18,6 +18,7 @@ jobs:
       - name: Execute pipeline dvc
         run: |
           pip3 install -r requirements.txt
+          dvc params diff >> report.md
           dvc repro
 
       - name: cml
@@ -26,6 +27,7 @@ jobs:
         run: |
           pip3 install -r requirements.txt
           
+
           cat metrics.txt >> report.md
           cml publish plot.png --md >> report.md
           cml send-comment report.md

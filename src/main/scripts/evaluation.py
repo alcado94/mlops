@@ -7,6 +7,10 @@ import joblib
 import sys
 import os
 import pickle
+import json
+from dvclive import Live
+
+live = Live("evaluation")
 
 # if len(sys.argv) != 3:
 #     sys.stderr.write("Arguments error. Usage:\n")
@@ -19,6 +23,10 @@ df_test = pd.read_csv(os.path.join(sys.argv[2], "df_test.csv"), index_col=False)
 y_test = df_test['congestion']
 X_test = df_test.drop(['congestion'], axis=1)
 y_pred = model.predict(X_test)
+
+live.log("mae", metrics.mean_absolute_error(y_test, y_pred))
+live.log("mse", metrics.mean_squared_error(y_test, y_pred))
+live.log("rmse", np.sqrt(metrics.mean_squared_error(y_test, y_pred)))
 
 with open("metrics.txt", "w") as outfile:
     outfile.write("Mean Absolute Error: " + str(metrics.mean_absolute_error(y_test, y_pred)) + "\n")
@@ -37,6 +45,3 @@ ax.set_ylabel("Mean decrease in impurity")
 fig.tight_layout()
 
 plt.savefig("plot.png")
-
-
-# joblib.dump(clf, "model.pkl")

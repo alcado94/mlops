@@ -4,7 +4,7 @@ from sklearn.decomposition import PCA
 import os
 import yaml
 
-params = yaml.safe_load("params.yaml")['preprocess']
+params = yaml.safe_load(open("params.yaml"))['preprocess']
 
 os.makedirs(os.path.join("data", "preprocess"), exist_ok=True)
 
