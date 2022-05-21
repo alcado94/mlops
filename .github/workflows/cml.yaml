@@ -17,6 +17,7 @@ jobs:
           python-version: 3.8
       - name: Execute pipeline dvc
         run: |
+          pip install -U pip
           pip3 install -r src/main/requirements.txt
           dvc params diff >> report.md
           dvc exp run
