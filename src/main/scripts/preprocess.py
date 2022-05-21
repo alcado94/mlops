@@ -6,6 +6,9 @@ import sys
 
 PCA_N_COMPONENTS = 4
 
+os.makedirs(os.path.join("data", "preprocess"), exist_ok=True)
+
+
 def setDataTypes(df):
     return df.assign(
                 time = pd.to_datetime(df.time)
@@ -89,4 +92,4 @@ df = (
         # )
 )
 
-df.to_csv(os.path.join(sys.argv[1], "df_prepared.csv"), index=False)
+df.to_csv("data/preprocess/df_preprocessed.csv", index=False)

@@ -1,29 +1,47 @@
 schema: '2.0'
 stages:
   train:
-    cmd: python src/main/scripts/train.py data/prepared
+    cmd: python src/main/scripts/train.py data/preprocess
     deps:
     - path: ./src/main/scripts/train.py
-      md5: f8873078c6ee9b6d15d80170fdb994d2
-      size: 5588
+      md5: 1cbae76a6b1f440f1407f661172b86b8
+      size: 1509
+    - path: data/preprocess
+      md5: d2a536f865a87f70e8c04a1a30fa50e3.dir
+      size: 41177248
+      nfiles: 1
     outs:
-    - path: data/prepared
-      md5: 110d0a1112b6aa80675b878de05d9338.dir
-      size: 22304110
+    - path: data/test
+      md5: 18ed5fb2e79e7bc473373ef4388c5143.dir
+      size: 13588112
       nfiles: 1
     - path: model.pkl
-      md5: 0fee70ac175016d79e481f9170c6fc91
-      size: 37968107
+      md5: f2bb53bf7e464cae697833b30b2555af
+      size: 37886703
   evaluation:
-    cmd: python src/main/scripts/evaluation.py model.pkl data/prepared
+    cmd: python src/main/scripts/evaluation.py model.pkl data/test
     deps:
     - path: ./src/main/scripts/evaluation.py
-      md5: cf48e9c4d12735a62b6d38ed3cc72773
-      size: 1352
-    - path: data/prepared
-      md5: 110d0a1112b6aa80675b878de05d9338.dir
-      size: 22304110
+      md5: 287009e19acca3c704a59cfd8e9b04f8
+      size: 1330
+    - path: data/test
+      md5: 18ed5fb2e79e7bc473373ef4388c5143.dir
+      size: 13588112
       nfiles: 1
     - path: model.pkl
-      md5: 0fee70ac175016d79e481f9170c6fc91
-      size: 37968107
+      md5: f2bb53bf7e464cae697833b30b2555af
+      size: 37886703
+  preprocess:
+    cmd: python src/main/scripts/preprocess.py data/test
+    deps:
+    - path: ./data/train.csv
+      md5: aafe87608f9b45b72a2be501feeb5732
+      size: 31292871
+    - path: ./src/main/scripts/preprocess.py
+      md5: 59938f9de6006ffd85862783800c60a9
+      size: 3601
+    outs:
+    - path: data/preprocess
+      md5: d2a536f865a87f70e8c04a1a30fa50e3.dir
+      size: 41177248
+      nfiles: 1
