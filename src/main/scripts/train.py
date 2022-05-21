@@ -60,7 +60,7 @@ def setCongestionColumnByHourAndMonth(df):
 
 def setCongestionColumnByRoad(df):
     temp = df.groupby(["road", "hour", "minute"]).median().reset_index()[["road", "hour", "minute", "congestion"]]
-    temp = temp.rename(columns={"congestion": "month_hour_congestion"})
+    temp = temp.rename(columns={"congestion": "road_congestion"})
     df = df.merge(temp, on=[ "road", "hour", "minute"])
     return df
 
@@ -93,9 +93,9 @@ df = (
         .pipe(setCongestionColumnByDayOfWeekAndHour)
         .pipe(setCongestionColumnByRoad)
         .drop(["row_id","x","y","direction", "time"], axis=1)
-        # .pipe(lambda _df:
-        #     transformPCA(_df.drop("congestion",axis=1), _df['congestion'])
-        # )
+        .pipe(lambda _df:
+            transformPCA(_df.drop("congestion",axis=1), _df['congestion'])
+        )
 )
 print("Finished preprocessing")
 
