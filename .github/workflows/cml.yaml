@@ -30,6 +30,6 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git fetch --prune
-          dvc metrics diff --show-md -all >> report.md
+          dvc metrics diff --show-md --all >> report.md
           cml publish plot.png --md >> report.md
           cml send-comment report.md
