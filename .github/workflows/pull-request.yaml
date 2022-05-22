@@ -1,51 +1,16 @@
-name: Pull request experiment to develop
-
+name: Slash Command Dispatch
 on:
   issue_comment:
     types: [created]
-    
 jobs:
-  commentCreated:
+  slashCommandDispatch:
     runs-on: ubuntu-latest
     steps:
-      - name: Add reaction
-        uses: peter-evans/create-or-update-comment@v2
+      - name: Slash Command Dispatch
+        uses: peter-evans/slash-command-dispatch@v3
         with:
-          comment-id: ${{ github.event.comment.id }}
-          reactions: eyes
-
-
-# jobs:
-#   example:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Add reaction
-#         uses: peter-evans/create-or-update-comment@v1
-#         with:
-#           token: ${{ secrets.REPO_ACCESS_TOKEN }}
-#           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-#           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
-#           reaction-type: hooray
-  # run:
-  #   runs-on: ubuntu-latest
- 
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with: 
-  #         fetch-depth: 0
-  #     - uses: iterative/setup-cml@v1
-  #     - uses: iterative/setup-dvc@v1
-  #     - uses: actions/setup-python@v2
-  #       with:
-  #         python-version: 3.8
-  #     - name: Execute pipeline dvc
-  #       env:
-  #         REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       run: |
-  #         pip install -U pip
-  #         pip3 install -r src/main/requirements.txt
-  #         git fetch --prune
-
-  #         dvc params diff --md develop ${{ github.event.pull_request.head.sha }} >> report.md
-  #         dvc metrics diff --md develop ${{ github.event.pull_request.head.sha }} >> report.md
-  #         cml send-comment report.md
+          token: ${{ secrets.PAT }}
+          commands: |
+            deploy
+            integration-test
+            build-docs
