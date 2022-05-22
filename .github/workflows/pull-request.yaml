@@ -1,14 +1,34 @@
-name: Slash Command Dispatch
-on: issue_comment
+name: Proposal of new model
+ 
+on: 
+  pull_request:
+    types:
+      - opened
+    branches:    
+      - 'develop'
+ 
 jobs:
-  check_comments:
-    name: Check comments for /test
+  run:
     runs-on: ubuntu-latest
+ 
     steps:
       - uses: actions/checkout@v3
         with: 
           fetch-depth: 0
-      - name: Show Evaluation
+      - uses: iterative/setup-cml@v1
+      - uses: iterative/setup-dvc@v1
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Execute pipeline dvc
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "test"
-    
+          pip install -U pip
+          pip3 install -r src/main/requirements.txt
+
+          dvc params diff --md develop $(git rev-parse HEAD) >> report.md
+          dvc metrics diff --md develop $(git rev-parse HEAD) >> report.md
+          
+          cml send-comment report.md 
