@@ -1,7 +1,13 @@
-name: train-my-model
- 
-on: push
- 
+name: Pull request experiment to develop
+
+on:
+  pull_request:
+    types:
+      - opened
+    branches:    
+      - 'develop'
+
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -12,7 +18,6 @@ jobs:
           fetch-depth: 0
       - uses: iterative/setup-cml@v1
       - uses: iterative/setup-dvc@v1
-
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
@@ -22,14 +27,9 @@ jobs:
         run: |
           pip install -U pip
           pip3 install -r src/main/requirements.txt
-          dvc params diff --md >> report.md
-          dvc exp run 
-
-      - name: Show Evaluation
-        env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
           git fetch --prune
-          dvc metrics diff --show-md -all >> report.md
+
+          dvc params diff --md develop >> report.md
+          dvc metrics diff --md develop -all >> report.md
           cml publish plot.png --md >> report.md
           cml send-comment report.md
