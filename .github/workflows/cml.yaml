@@ -1,6 +1,10 @@
 name: train-my-model
  
-on: push
+on: 
+  push:
+    branches-ignore:
+        - develop
+  
  
 jobs:
   run:
