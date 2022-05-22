@@ -1,26 +1,31 @@
 name: Pull request experiment to develop
 
 on:
-  pull_request_review_comment:
+  issue_comment:
     types: [created]
-  # pull_request:
-  #   types:
-  #     - opened
-  #   branches:    
-  #     - 'develop'
-
-
+    
 jobs:
-  example:
+  commentCreated:
     runs-on: ubuntu-latest
     steps:
       - name: Add reaction
-        uses: peter-evans/create-or-update-comment@v1
+        uses: peter-evans/create-or-update-comment@v2
         with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
-          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
-          reaction-type: hooray
+          comment-id: ${{ github.event.comment.id }}
+          reactions: eyes
+
+
+# jobs:
+#   example:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Add reaction
+#         uses: peter-evans/create-or-update-comment@v1
+#         with:
+#           token: ${{ secrets.REPO_ACCESS_TOKEN }}
+#           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+#           comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+#           reaction-type: hooray
   # run:
   #   runs-on: ubuntu-latest
  
