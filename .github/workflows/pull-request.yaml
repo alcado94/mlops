@@ -29,6 +29,6 @@ jobs:
           pip3 install -r src/main/requirements.txt
           git fetch --prune
 
-          dvc params diff --md develop ${GITHUB_REF##*/} >> report.md
-          dvc metrics diff --md develop ${GITHUB_REF##*/} >> report.md
+          dvc params diff --md develop ${{ github.event.pull_request.head.sha }} >> report.md
+          dvc metrics diff --md develop ${{ github.event.pull_request.head.sha }} >> report.md
           cml send-comment report.md
