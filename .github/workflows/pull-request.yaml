@@ -1,16 +1,19 @@
 name: Slash Command Dispatch
-on:
-  issue_comment:
-    types: [created]
+on: issue_comment
 jobs:
-  slashCommandDispatch:
+  check_comments:
+    name: Check comments for /test
     runs-on: ubuntu-latest
     steps:
-      - name: Slash Command Dispatch
-        uses: peter-evans/slash-command-dispatch@v3
+      - name: Check for Command
+        id: command
+        uses: xt0rted/slash-command-action@v1
         with:
-          token: ${{ secrets.PAT }}
-          commands: |
-            deploy
-            integration-test
-            build-docs
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          command: test
+          reaction: "true"
+          reaction-type: "eyes"
+          allow-edits: "false"
+          permission-level: admin
+      - name: Act on the command
+        run: echo "The command was '${{ steps.command.outputs.command-name }}' with arguments '${{ steps.command.outputs.command-arguments }}'"
