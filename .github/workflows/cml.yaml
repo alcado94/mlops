@@ -8,7 +8,8 @@ jobs:
  
     steps:
       - uses: actions/checkout@v2
- 
+        with: 
+          fetch-depth: 0
       - uses: iterative/setup-cml@v1
       - uses: iterative/setup-dvc@v1
 
@@ -22,7 +23,7 @@ jobs:
           pip install -U pip
           pip3 install -r src/main/requirements.txt
           dvc params diff --md >> report.md
-          dvc repro
+          dvc exp run 
 
       - name: Show Evaluation
         env:
