@@ -4,46 +4,43 @@ stages:
     cmd: python src/main/scripts/train.py data/preprocess
     deps:
     - path: ./src/main/scripts/train.py
-      md5: a7e10e98501f41ea0604f132dbe318a0
-      size: 1576
+      md5: 9dcc75f85d25f12a54d33ed489a427e6
+      size: 1408
     - path: data/preprocess
       md5: 9bfe46d8fb34c6b8bd563371774ade36.dir
       size: 41177238
       nfiles: 1
-    params:
-      params.yaml:
-        train.n_estimators: 3
     outs:
     - path: data/test
       md5: f0129c39bb03ca1cacf11429d4c87f4d.dir
       size: 13588102
       nfiles: 1
     - path: model.pkl
-      md5: 31570956f60e3de28b68aecafdf2a47e
-      size: 113718008
+      md5: ecce6bdeac2b56b022a18711c0c07f59
+      size: 1934
   evaluation:
     cmd: python src/main/scripts/evaluation.py model.pkl data/test
     deps:
     - path: ./src/main/scripts/evaluation.py
-      md5: 9f4b39e2ac58537c56de2f44be14707e
-      size: 1553
+      md5: 7ecab07a517acc4ffb28edd1897d34a1
+      size: 1565
     - path: data/test
       md5: f0129c39bb03ca1cacf11429d4c87f4d.dir
       size: 13588102
       nfiles: 1
     - path: model.pkl
-      md5: 31570956f60e3de28b68aecafdf2a47e
-      size: 113718008
+      md5: ecce6bdeac2b56b022a18711c0c07f59
+      size: 1934
     outs:
     - path: evaluation.json
-      md5: 94fb6c22442736a4b76073697d074db7
-      size: 93
+      md5: e5785652fc1b393c6fa6e92cbd9e6104
+      size: 91
     - path: metrics.txt
-      md5: 753d9042b48ab65b5583d3fc1b1bb0ae
-      size: 120
+      md5: d6409a6f5f4adea0a86b42b655375067
+      size: 118
     - path: plot.png
-      md5: 822ecb5aa7a46bfdfc362b6ef43c8b4d
-      size: 34881
+      md5: 981fb30a2de66aaae0a898ba727e8856
+      size: 7990
   preprocess:
     cmd: python src/main/scripts/preprocess.py data/test
     deps:

@@ -1,17 +1,14 @@
 import sys
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
-from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn import metrics
-import matplotlib.pyplot as plt
-import json
 import os
 import numpy as np
 import pandas as pd
 import joblib
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 import yaml
-from sklearn.decomposition import PCA
-from sklearn.model_selection import RandomizedSearchCV
+
 
 params = yaml.safe_load(open("params.yaml"))['train']
 
@@ -39,17 +36,17 @@ random_grid = {
 }
 
 
-# rf = RandomForestRegressor()
+
 # clf = RandomizedSearchCV(estimator = rf, param_distributions = random_grid, n_iter = 100, cv = 3, verbose=2, random_state=42, n_jobs = -1)
 
+model = Pipeline([('scale', StandardScaler()),
+                 ('model', LinearRegression())])
 
-clf = RandomForestRegressor(n_estimators=params['n_estimators'], random_state = 42)
-
-clf.fit(X_train, y_train)
+model.fit(X_train, y_train)
 
 print("Finished training")
 
-joblib.dump(clf, "model.pkl")
+joblib.dump(model, "model.pkl")
 
 os.makedirs(os.path.join("data", "test"), exist_ok=True)
 df_test.to_csv("data/test/df_test.csv", index=False)
